@@ -41,6 +41,8 @@ export default {
       const jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard');
 
       const options = {
+        jwtToken,
+
         prefix: pathPrefix,
 
         // Recommended setting so that the forum container
@@ -57,7 +59,7 @@ export default {
         },
 
         onFail: () => {
-          this.error = 'Failed to load forum';
+          this.error = 'Failed to load forum...';
           this.loading = false;
         },
       };
@@ -67,7 +69,10 @@ export default {
   },
 
   mounted() {
-    this.createPeerBoard();
+    this.createPeerBoard().catch(err => {
+      console.error(err);
+      this.error = 'Failed to load forum...'
+    });
   }
 }
 </script>

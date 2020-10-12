@@ -4,7 +4,7 @@ import { createForum } from '@peerboard/core';
 // Settings -> Hosting -> Board ID
 const boardID = '<BOARD ID>';
 // Settings -> Hosting -> Path Prefix
-const prefix = '<PATH PREFIX>';
+const pathPrefix = '<PATH PREFIX>';
 
 class ForumPage extends React.Component {
 
@@ -12,39 +12,40 @@ class ForumPage extends React.Component {
 
   state = {
     error: null,
-    forumReady: false,
+    loading: true,
   };
 
-  async initForum() {
-    // Get the token from your backend
-    const jwtToken = await http.generateBearerToken();
+  async createPeerBoard() {
+    const jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard');
     
     const options = {
-      prefix,
       jwtToken,
-      
-      // in px
-      minHeight: window.innerHeight - YOUR_HEADER_HEIGHT - YOUR_FOOTER_HEIGHT,
+
+      prefix: pathPrefix,
+
+      // Recommended setting so that the forum container
+      // will always occupy all available space
+      minHeight: window.innerHeight,
+
+      // Update your page title according to the forum state
+      onTitleChanged: title =>
+        window.document.title = 'Your title ' + title,
       
       // You can remove the loaded and forum will be showed to the user
       onReady: () => this.setState({
-        forumReady: true,
+        loading: false,
       }),
   
       onFail: () => this.setState({
-        error: "Failed to load forum",
+        error: "Failed to load forum...",
       }),
-      
-      // Customize your title
-      onTitleChanged: (title) =>
-        window.document.title = "Community: " + title,
     };
     
     createForum(boardID, this.containerRef.current, options);
   }
 
   componentDidMount() {
-    this.initForum().catch(err => this.setState({
+    this.createPeerBoard().catch(err => this.setState({
       error: err.message,
     }));
   }
@@ -52,9 +53,8 @@ class ForumPage extends React.Component {
   render() {
     return (
       <div>
-        {/* Show error, loader or render the forum */}
-        {this.state.error && (this.state.error)}
-        {!this.state.forumReady && 'Show a spinner...'}
+        {this.state.error && this.state.error}
+        {this.state.loading && 'Loading...'}
         <div ref={this.containerRef}></div>
       </div>
     );
