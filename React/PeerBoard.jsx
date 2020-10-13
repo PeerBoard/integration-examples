@@ -6,7 +6,10 @@ const boardID = '<BOARD ID>';
 // Settings -> Hosting -> Path Prefix
 const pathPrefix = '<PATH PREFIX>';
 
-class ForumPage extends React.Component {
+// Somewhere in your routing configuration. Don't use exact attribute - you should allow all nested routes
+// <Route path="<PATH PREFIX>" component={PageWithPeerboard} />
+
+class PageWithPeerboard extends React.Component {
 
   containerRef = React.createRef();
 
