@@ -36,13 +36,9 @@ export default {
         return;
       }
 
-      const { createForum } = require('@peerboard/core');
-
-      const jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard');
+      const { createForum } = require('@peerboard/core');     
 
       const options = {
-        jwtToken,
-
         prefix: pathPrefix,
 
         // Recommended setting so that the forum container
@@ -63,6 +59,11 @@ export default {
           this.loading = false;
         },
       };
+      
+      
+      // Optional. Do this only if you want to implement seamless login https://community.peerboard.com/post/183197627?category=2097967386
+      // Add auth token so the user will be authenticated when community is loaded
+      options.jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard')
 
       createForum(boardId, this.$refs.peerboardContainer, options)
     }
