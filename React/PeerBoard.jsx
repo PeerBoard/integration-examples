@@ -19,8 +19,6 @@ class PageWithPeerboard extends React.Component {
   };
 
   async createPeerBoard() {
-    const jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard');
-    
     const options = {
       jwtToken,
 
@@ -43,6 +41,10 @@ class PageWithPeerboard extends React.Component {
         error: "Failed to load forum...",
       }),
     };
+    
+    // Optional. Do this only if you want to implement seamless login https://community.peerboard.com/post/183197627?category=2097967386
+    // Add auth token so the user will be authenticated when community is loaded
+    options.jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard')
     
     createForum(boardID, this.containerRef.current, options);
   }
