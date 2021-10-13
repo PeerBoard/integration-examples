@@ -24,6 +24,7 @@ export default {
     return {
       error: '',
       loading: true,
+      forum: null,
     }
   },
 
@@ -65,7 +66,7 @@ export default {
       // Add auth token so the user will be authenticated when community is loaded
       options.jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard')
 
-      createForum(boardId, this.$refs.peerboardContainer, options)
+      this.forum = createForum(boardId, this.$refs.peerboardContainer, options)
     }
   },
 
@@ -74,6 +75,10 @@ export default {
       console.error(err);
       this.error = 'Failed to load forum...'
     });
+  },
+  
+  unmounted() {
+    this.forum.destroy();
   }
 }
 </script>
