@@ -14,6 +14,7 @@ class PageWithPeerboard extends React.Component {
   containerRef = React.createRef();
 
   state = {
+    forum: null,
     error: null,
     loading: true,
   };
@@ -46,13 +47,17 @@ class PageWithPeerboard extends React.Component {
     // Add auth token so the user will be authenticated when community is loaded
     options.jwtToken = await http.post('https://api.myapp.com/create-token-for-peerboard')
     
-    createForum(boardID, this.containerRef.current, options);
+    this.forum = createForum(boardID, this.containerRef.current, options);
   }
 
   componentDidMount() {
     this.createPeerBoard().catch(err => this.setState({
       error: err.message,
     }));
+  }
+  
+  componentWillUnmount() {
+    this.forum.destroy()
   }
 
   render() {
