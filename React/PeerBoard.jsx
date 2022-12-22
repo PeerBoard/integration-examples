@@ -6,6 +6,7 @@ function CommunityPage() {
   const [jwtToken, setJwtToken] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
+  const instantiated = React.useRef(false); // It's suggestive to render the community once
 
   React.useEffect(() => {
     setLoading(true);
@@ -33,6 +34,11 @@ function CommunityPage() {
 
   // Run effect on component render
   React.useEffect(() => {
+    if (instantiated.current) {
+      return;
+    }
+    instantiated.current = true;
+    
     if (!jwtToken) {
       return;
     }
